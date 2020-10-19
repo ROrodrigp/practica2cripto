@@ -1,13 +1,12 @@
 #!/bin/sh
 import fileinput
-#import codecs 
-#hex = codecs.encode(key, "hex")
 
 def KSA(key):
+	#Llenamos el vector S con valores de 0 a 256
 	S = list(range(0,256))
 	keylength=len(key)
 	j = 0 
-
+	#Aqui se iran cambiando los valores de S segun el valor de la operacion en J 
 	for i in range(256):
 		j = (j+S[i]+key[i%keylength])%256
 		S[i],S[j]= S[j],S[i]
@@ -19,7 +18,7 @@ def PRGA(S,mensaje):
 
 	KS = []
 	i = j = k = 0 
-
+	#Llenamos el vector KS en este ciclo 
 	while (k < len(mensaje)):
 		i = (i+1)%256
 		j = (j+S[i])%256
@@ -29,28 +28,21 @@ def PRGA(S,mensaje):
 		k+=1
 	return KS
 
-	#print(KS)
 def cifrado(key, mensaje):
+	#Aqui se llama a KSA y a PRGA 
 	S = KSA(key)
 	KS = PRGA(S, mensaje)
-	#print('S:',S)
-	#print('KS:',KS)
 	cifrado = []
+	cifradohexa= ''
+	#En este ciclo se hace XOR de KS con el mensaje 
 	for i in range(len(mensaje)):
 		C = KS[i] ^ mensaje[i]
 		cifrado.append(C)
-	
-	d=[]
-	e = 0 
-	y= ''
-	for i in cifrado:
-		#Estan en decimal 
-		d.append(i)
-		z = format(d[e],'02X')
-		y=y+z
-		e+=1
-	print(y)
-
+	#Estan en decimal y se les da formato de hexadecimal
+	for i in cifrado: 
+		z = format(i,'02X')
+		cifradohexa+=z
+	print(cifradohexa)
 
 archivo = fileinput.input()
 leerlinea = archivo.readline()
@@ -59,8 +51,6 @@ key = bytes(seleccion,'utf-8')
 leerlinea = archivo.readline()
 seleccion= leerlinea.rstrip('\n')
 mensaje = bytes(seleccion,'utf-8')
-print(key)
-print(mensaje)
 cifrado(key,mensaje)
 
 
