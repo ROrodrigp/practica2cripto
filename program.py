@@ -1,10 +1,6 @@
 #!/bin/sh
 import fileinput
 #import codecs 
-
-
-
-
 #hex = codecs.encode(key, "hex")
 
 def KSA(key):
@@ -55,8 +51,16 @@ def cifrado(key, mensaje):
 		e+=1
 	print(y)
 
-key= b"Wiki"
-mensaje = b"pedia"
+
+archivo = fileinput.input()
+leerlinea = archivo.readline()
+seleccion= leerlinea.rstrip('\n')
+key = bytes(seleccion,'utf-8')
+leerlinea = archivo.readline()
+seleccion= leerlinea.rstrip('\n')
+mensaje = bytes(seleccion,'utf-8')
+print(key)
+print(mensaje)
 cifrado(key,mensaje)
 
 
